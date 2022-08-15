@@ -1,0 +1,26 @@
+Param(
+ [string]$resourceGroup,
+ [string]$VMName#,
+ #[string]$UAMI
+)
+
+#$automationAccount = "tonyAAARM"
+
+# Ensures you do not inherit an AzContext in your runbook
+Disable-AzContextAutosave -Scope Process
+
+$AzureContext = (Connect-AzAccount -Identity).context
+
+
+
+#take tags
+$r = Get-AzVM -Name $VMName -ResourceGroupName $resourceGroup;
+$id=$r.ID;
+#$tags=$r.Tags;
+#Write-Output $id
+
+
+#assign tag to resource
+#$tags+=@{1=Get-Date};
+New-AzTag -ResourceId $id @{Date=Get-Date}
+Write-Output $tags
